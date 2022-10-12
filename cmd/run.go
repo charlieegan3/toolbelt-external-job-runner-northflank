@@ -16,6 +16,10 @@ func (e *exampleExternalJob) Name() string {
 	return "example-external-job"
 }
 
+func (e *exampleExternalJob) RunnerName() string {
+	return "nop"
+}
+
 func (e *exampleExternalJob) Config() map[string]any {
 	return e.cfg
 }

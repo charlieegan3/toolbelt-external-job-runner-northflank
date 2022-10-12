@@ -16,6 +16,16 @@ import (
 type Northflank struct {
 	// APIToken is the token used to authenticate with the Northflank API
 	APIToken string
+
+	// NameOverride, if set, will change the Name() value
+	NameOverride string
+}
+
+func (n *Northflank) Name() string {
+	if n.NameOverride != "" {
+		return n.NameOverride
+	}
+	return "northflank"
 }
 
 func (n *Northflank) Configure(config map[string]any) error {
