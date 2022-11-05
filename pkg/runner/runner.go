@@ -58,8 +58,10 @@ func (n *Northflank) RunJob(job apis.ExternalJob) error {
 
 	p := createJobPayload{}
 
+	p.Deployment.Docker.ConfigType = "customCommand"
+
 	path = "command"
-	p.Deployment.CMDOverride, ok = cfg.Path(path).Data().(string)
+	p.Deployment.Docker.CustomCommand, ok = cfg.Path(path).Data().(string)
 	if !ok {
 		return fmt.Errorf("missing required config path: %s", path)
 	}
@@ -102,8 +104,11 @@ func (n *Northflank) RunJob(job apis.ExternalJob) error {
 
 type createJobPayload struct {
 	Deployment struct {
-		CMDOverride        string `json:"cmdOverride,omitempty"`
-		EntrypointOverride string `json:"entrypointOverride,omitempty"`
+		Docker struct {
+			// one of: default, customEntrypoint, customCommand, customEntrypointCustomCommand
+			ConfigType    string `json:"configType"`
+			CustomCommand string `json:"customCommand,omitempty"`
+		} `json:"docker"`
 	} `json:"deployment,omitempty"`
 	RuntimeEnvironment map[string]string `json:"runtimeEnvironment,omitempty"`
 }
